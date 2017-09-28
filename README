@@ -12,6 +12,6 @@ Pre selected headers to filter.
 
 For usage type:
 
-```bash
+
 ./AssemblyFilter.sh -h
-```
+
