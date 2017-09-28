@@ -9,3 +9,6 @@ Input files required are:
 Query assembly
 Reference database
 Pre selected headers to filter.
+
+For usage type:
+`./AssemblyFilter.sh -h`
