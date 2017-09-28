@@ -13,5 +13,5 @@ Pre selected headers to filter.
 For usage type:
 
 
-./AssemblyFilter.sh -h
+    ./AssemblyFilter.sh -h
 
