@@ -22,7 +22,7 @@ usage="$basename "$0") [-h] [-i] [-p] [-d] [-t] [-l] -- A wrapper to BLAST an as
 
 Options:
 	-h show this help message
-	-i Assembly file to be filtered.
+	-i Assembly file to be filtered - can be gzipped.
 	-p Output prefix
 	-d BLAST formatted nucleotide reference database to query sequnces against
 	-t BLASTdb type:
@@ -145,11 +145,13 @@ echo "Everything seems in order, ready to proceed
 #Gunzip file - Not a common input, but good to have.
 if [[ $Query =~ .gz$ ]]; then
 gunzip $Query
-Query=$(echo $Query | sed 's/.gz$//')
+Query2=$(echo $Query | sed 's/.gz$//')
+else
+Query2=$Query
 fi
 
 #Remove any pipes that may be lurking
-sed 's/|/_/g' $Query > $Prefix.input.fa
+sed 's/|/_/g' $Query2 > $Prefix.input.fa
 
 #Run blast
 mkdir -p blastn
@@ -164,6 +166,11 @@ xargs samtools faidx $Prefix.input.fa < $Prefix.filt.h > $Prefix.filt.fasta
 rm $Prefix.input.fa
 rm $Prefix.filt.h
 
+#Restore reference to gzipped state, if provided that way by the user
+if [[ $Query =~ .gz$ ]]; then
+gzip $Query2
+fi
+
 if [ -e $Prefix.filt.fasta ]; then
 echo "Congratulations, it looks like everything went well. Please check the output file $Prefix.filt.fasta for your results.
 
@@ -174,5 +181,6 @@ echo "Oh dear! Something went wrong and the output file was not produced. Please
 1. That all input files are correct
 2. The the reference list contains the NCBI accessions that you wish to positively filter for
 "
+fi
 
 exit
