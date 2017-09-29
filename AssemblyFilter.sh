@@ -13,15 +13,16 @@
 #IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE 
 #OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-usage="$basename "$0") [-h] [-i] [-p] [-d] [-t] [-l] -- A wrapper to BLAST an assembly and filter for similarity to pre-determined reference sequences
+usage="$basename "$0") [-h] [-i] [-p] [-d] [-t] [-l] [-T] -- A wrapper to BLAST an assembly and filter for similarity to pre-determined reference sequences
 	A new assembly file, filtered for similarity to the pre-defined reference sequences will be created in the current working directory called PREFIX.filt.fasta .
 	We will also retain the blastn results in a directory called blastn, in case the user wishes to inspect them. Otherwise this directory can be safely deleted after run completeion.
 
 	Please note, any pipes '|' present in the sequence headers will be removed and replaced with underscores '_'
-	We have hard-coded in the blast word size (16) and number of threads (1). If you wish to change these then please edit the command on line 156
 
 Options:
 	-h show this help message
+	
+Required Arguments:
 	-i Assembly file to be filtered - can be gzipped.
 	-p Output prefix
 	-d BLAST formatted nucleotide reference database to query sequnces against
@@ -31,10 +32,16 @@ Options:
 	   We need this information because it will tell us how to filter the blast results.
 	   NCBI formatted databases have gi information we want to strip away.
 	-l List of reference sequences to positively filter assembly for
+	
+Optional Arguments:
+	-T Number of threads to use [Default = 1]
+	-W Word size for Blast [Default = 24]
+		Smaller word size have a higher specificity at a trade-off with cpu time.
+		If unsure compare results of 24 with 16 and optimize from there.
 
 "
 
-while getopts ':hi:p:d:l:t:' option; do
+while getopts ':hi:p:d:l:t:T;' option; do
 	case "$option" in
 		h)  echo "$usage"
 			 exit
@@ -48,6 +55,10 @@ while getopts ':hi:p:d:l:t:' option; do
 		t)  RunType=$OPTARG
 			 ;;
 		l)  Ref=$OPTARG
+			 ;;
+		T)  Threads=$OPTARG
+			 ;;
+		W)  WS=$OPTARG
 			 ;;
 		\?) printf "illegal option: -%s\n\n" "$OPTARG" >&2
 		    echo "$usage"
@@ -74,6 +85,19 @@ echo "
 "
 exit 1
 fi
+#Set Default threads if not provided
+if [[ -z $Threads ]];then
+echo "Threads not specified, will proceed with default [1]
+"
+Threads=1
+fi
+
+#Set Default word size if not provided
+if [[ -z $WS ]]; then
+echo "Word Size not specified, will proceed with default [24]
+WS=24
+fi
+
 #Check for existence of files to prevent over-writing
 if [[ -e blastn/$Prefix.blastn ]]; then
 echo "
@@ -155,7 +179,7 @@ sed 's/|/_/g' $Query2 > $Prefix.input.fa
 
 #Run blast
 mkdir -p blastn
-blastn -query $Prefix.input.fa -db $DB -max_target_seqs 1 -outfmt 6 -word_size 16 -out blastn/$Prefix.blastn
+blastn -query $Prefix.input.fa -db $DB -max_target_seqs 1 -outfmt 6 -word_size $WS -num_threads $Threads -out blastn/$Prefix.blastn
 if [[$RunType == 1]]; then
 awk -v FS='|' '{print $4}' blastn/$Prefix.blastn | sed 's/\..*//' | sort -u | comm -12 - <(sort $Ref | sed 's/\..*//') | join -2 3 - <(sed 's/|/ /3' blastn/$Prefix.blastn | sed 's/\..*//' | sort -k3,3) | awk '{print $2}' | sort -u > $Prefix.filt.h
 fi
