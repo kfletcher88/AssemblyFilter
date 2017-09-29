@@ -56,7 +56,7 @@ while getopts ':hi:p:d:l:t:' option; do
 	esac
 done
 
-Check Arguments provided
+#Check Arguments provided
 if [[ -z $Prefix || -z $Query || -z $DB || -z $Ref ]]; then
 	echo "
 	ERROR: Some Variables are not set
