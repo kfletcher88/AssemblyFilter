@@ -1,4 +1,5 @@
-A shell wrapper to blast an assembly against a custom database and then positively filter for pre-selected reference sequences:
+A shell wrapper to blast an assembly against a custom database and then positively filter for pre-selected reference sequences.
+
 The wrapper requires the following tools:
 
 1. NCBI blast
@@ -6,9 +7,9 @@ The wrapper requires the following tools:
 
 Input files required are:
 
-Query assembly
-Reference database
-Pre selected headers to filter.
+1. Query assembly
+2. Reference database
+3. Pre selected headers to filter.
 
 For usage type:
 
