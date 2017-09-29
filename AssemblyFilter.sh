@@ -56,14 +56,14 @@ while getopts ':hi:p:d:l:t:' option; do
 	esac
 done
 
-#Check Arguments provided
-#if [[ -z $Prefix || -z $Query || -z $DB || -z $Ref ]]; then
-#	echo "
-#	ERROR: Some Variables are not set
-#"
-#	echo "$usage"
-#	exit 1
-#fi
+Check Arguments provided
+if [[ -z $Prefix || -z $Query || -z $DB || -z $Ref ]]; then
+	echo "
+	ERROR: Some Variables are not set
+"
+	echo "$usage"
+	exit 1
+fi
 if [[ $RunType != [1/2] ]]; then
 echo "
            Error RunType set incorrectly. Please set to either:
