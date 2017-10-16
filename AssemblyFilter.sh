@@ -95,6 +95,7 @@ fi
 #Set Default word size if not provided
 if [[ -z $WS ]]; then
 echo "Word Size not specified, will proceed with default [24]
+"
 WS=24
 fi
 
