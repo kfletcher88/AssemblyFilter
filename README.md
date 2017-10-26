@@ -2,8 +2,8 @@ A shell wrapper to blast an assembly against a custom database and then positive
 
 The wrapper requires the following tools:
 
-1. NCBI blast
-2. Samtools v1.3+
+1. [NCBI blast](https://www.ncbi.nlm.nih.gov/pubmed/2231712 "Altschul et al. 1990")
+2. [Samtools v1.3+](https://www.ncbi.nlm.nih.gov/pubmed/19505943 "Li et al. 2009") 
 
 Input files required are:
 
