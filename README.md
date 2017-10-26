@@ -41,6 +41,6 @@ Optional arguments include:
 
 `-T` Number of threads for the process to use. The default is set to 10.
 
-`-W' Word size to seed alignments.
+`-W` Word size to seed alignments.
 
 The shell script also contains safe-guards to ensure files generated here are not over-written and will clean up intermediate files which are of no use to the user down-stream.
