@@ -34,7 +34,7 @@ Required Arguments:
 	-l List of reference sequences to positively filter assembly for
 	
 Optional Arguments:
-	-T Number of threads to use [Default = 1]
+	-T Number of threads to use [Default = 10]
 	-W Word size for Blast [Default = 24]
 		Smaller word size have a higher specificity at a trade-off with cpu time.
 		If unsure compare results of 24 with 16 and optimize from there.
@@ -87,9 +87,9 @@ exit 1
 fi
 #Set Default threads if not provided
 if [[ -z $Threads ]];then
-echo "Threads not specified, will proceed with default [1]
+echo "Threads not specified, will proceed with default [10]
 "
-Threads=1
+Threads=10
 fi
 
 #Set Default word size if not provided
