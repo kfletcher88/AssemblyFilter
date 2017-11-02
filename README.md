@@ -22,7 +22,7 @@ The basic commands called by this shell script, when using NCBI nt, are:
 ```
 blastn -query [Input.fasta] -db [BLASTdb/nt] -max_target_seqs 1 -outfmt 6 -word_size 24 -num_threads 10 -out [Prefix].blastn
 awk -v FS='|' '{print $4}' [Prefix].blastn | sed 's/\..*//' | sort -u | comm -12 - <(sort [RefSeqs] | sed 's/\..*//') | join -2 3 - <(sed 's/|/ /3' [Prefix].blastn | sed 's/\..*//' | sort -k3,3) | awk '{print $2}' | sort -u > [Prefix].filt.h
-xargs samtools faidx Input.fasta] < [Prefix].filt.h > [Prefix].filt.fasta
+xargs samtools faidx [Input.fasta] < [Prefix].filt.h > [Prefix].filt.fasta
 ```
 
 Where the text contained in square brackets are variables provided to the shell script. Specifically:
