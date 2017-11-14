@@ -13,7 +13,7 @@
 #IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE 
 #OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-usage="$basename "$0") [-h] [-i] [-p] [-d] [-t] [-l] [-T] -- A wrapper to BLAST an assembly and filter for similarity to pre-determined reference sequences
+usage=("$basename "$0") [-h] [-i] [-p] [-d] [-t] [-l] [-T] -- A wrapper to BLAST an assembly and filter for similarity to pre-determined reference sequences
 	A new assembly file, filtered for similarity to the pre-defined reference sequences will be created in the current working directory called PREFIX.filt.fasta .
 	We will also retain the blastn results in a directory called blastn, in case the user wishes to inspect them. Otherwise this directory can be safely deleted after run completeion.
 
