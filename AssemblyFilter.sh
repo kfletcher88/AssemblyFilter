@@ -26,7 +26,7 @@ Required Arguments:
 	-i Assembly file to be filtered - can be gzipped.
 	-p Output prefix
 	-d BLAST formatted nucleotide reference database to query sequnces against
-	-t BLASTdb type:
+	-T BLASTdb type:
 		1 = NCBI formatted db
 		2 = Custome formatted db
 	   We need this information because it will tell us how to filter the blast results.
@@ -34,7 +34,7 @@ Required Arguments:
 	-l List of reference sequences to positively filter assembly for
 	
 Optional Arguments:
-	-T Number of threads to use [Default = 10]
+	-t Number of threads to use [Default = 10]
 	-W Word size for Blast [Default = 24]
 		Smaller word size have a higher specificity at a trade-off with cpu time.
 		If unsure compare results of 24 with 16 and optimize from there.
@@ -52,11 +52,11 @@ while getopts ':hi:p:d:l:t:T;' option; do
 			 ;;
 		d)  DB=$OPTARG
 			 ;;
-		t)  RunType=$OPTARG
+		T)  RunType=$OPTARG
 			 ;;
 		l)  Ref=$OPTARG
 			 ;;
-		T)  Threads=$OPTARG
+		t)  Threads=$OPTARG
 			 ;;
 		W)  WS=$OPTARG
 			 ;;
@@ -76,14 +76,16 @@ if [[ -z $Prefix || -z $Query || -z $DB || -z $Ref ]]; then
 	exit 1
 fi
 if [[ $RunType != [1/2] ]]; then
-echo "
-           Error RunType set incorrectly. Please set to either:
+RunType=1
+echo "Run type not set, assuming NCBI database being used. If not please terminate the run and select a run type:
+#echo "
+#           Error RunType set incorrectly. Please set to either:
                 1 = NCBI formatted db
-                2 = Custome formatted db
+                2 = Custom formatted db
            We need this information because it will tell us how to filter the blast results.
            NCBI formatted databases have gi information we want to strip away.
 "
-exit 1
+#exit 1
 fi
 #Set Default threads if not provided
 if [[ -z $Threads ]];then
