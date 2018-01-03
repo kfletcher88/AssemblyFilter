@@ -37,9 +37,9 @@ Where the text contained in square brackets are variables provided to the shell 
 
 Optional arguments include:
 
-`-t` Run type 1 will strip away the gi information from the BLASTn results. Run type 2 will not attempt to do this and is therefore suited for custom DB builds.
+`-T` Run type 1 will strip away the gi information from the BLASTn results. Run type 2 will not attempt to do this and is therefore suited for custom DB builds.
 
-`-T` Number of threads for the process to use. The default is set to 10.
+`-t` Number of threads for the process to use. The default is set to 10.
 
 `-W` Word size to seed alignments.
 
