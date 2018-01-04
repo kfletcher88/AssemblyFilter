@@ -181,10 +181,10 @@ sed 's/|/_/g' $Query2 > $Prefix.input.fa
 #Run blast
 mkdir -p blastn
 blastn -query $Prefix.input.fa -db $DB -max_target_seqs 1 -outfmt 6 -word_size $WS -num_threads $Threads -out blastn/$Prefix.blastn
-if [[$RunType == 1 ]]; then
+if [[ $RunType == 1 ]]; then
 awk -v FS='|' '{print $4}' blastn/$Prefix.blastn | sed 's/\..*//' | sort -u | comm -12 - <(sort $Ref | sed 's/\..*//') | join -2 3 - <(sed 's/|/ /3' blastn/$Prefix.blastn | sed 's/\..*//' | sort -k3,3) | awk '{print $2}' | sort -u > $Prefix.filt.h
 fi
-if [[$RunType == 2 ]]; then
+if [[ $RunType == 2 ]]; then
 awk '{print $2}' blastn/$Prefix.blastn | sort -u | comm -12 - <(sort $Ref) | join -2 2 - <(sort -k2,2 blastn/$Prefix.blastn) | awk '{print $2}' | sort -u > $Prefix.filt.h
 fi
 xargs samtools faidx $Prefix.input.fa < $Prefix.filt.h > $Prefix.filt.fasta
