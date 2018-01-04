@@ -41,7 +41,7 @@ Optional Arguments:
 
 "
 
-while getopts ':hi:p:d:l:t:T;' option; do
+while getopts ':hp:i:d:T:l:t:W:' option; do
 	case "$option" in
 		h)  echo "$usage"
 			 exit
@@ -78,8 +78,6 @@ fi
 if [[ $RunType != [1/2] ]]; then
 RunType=1
 echo "Run type not set, assuming NCBI database being used. If not please terminate the run and select a run type:
-#echo "
-#           Error RunType set incorrectly. Please set to either:
                 1 = NCBI formatted db
                 2 = Custom formatted db
            We need this information because it will tell us how to filter the blast results.
@@ -183,10 +181,10 @@ sed 's/|/_/g' $Query2 > $Prefix.input.fa
 #Run blast
 mkdir -p blastn
 blastn -query $Prefix.input.fa -db $DB -max_target_seqs 1 -outfmt 6 -word_size $WS -num_threads $Threads -out blastn/$Prefix.blastn
-if [[$RunType == 1]]; then
+if [[$RunType == 1 ]]; then
 awk -v FS='|' '{print $4}' blastn/$Prefix.blastn | sed 's/\..*//' | sort -u | comm -12 - <(sort $Ref | sed 's/\..*//') | join -2 3 - <(sed 's/|/ /3' blastn/$Prefix.blastn | sed 's/\..*//' | sort -k3,3) | awk '{print $2}' | sort -u > $Prefix.filt.h
 fi
-if [[$RunType == 2]]; then
+if [[$RunType == 2 ]]; then
 awk '{print $2}' blastn/$Prefix.blastn | sort -u | comm -12 - <(sort $Ref) | join -2 2 - <(sort -k2,2 blastn/$Prefix.blastn) | awk '{print $2}' | sort -u > $Prefix.filt.h
 fi
 xargs samtools faidx $Prefix.input.fa < $Prefix.filt.h > $Prefix.filt.fasta
