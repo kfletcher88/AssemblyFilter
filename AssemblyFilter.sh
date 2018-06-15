@@ -175,17 +175,26 @@ else
 Query2=$Query
 fi
 
-#Remove any pipes that may be lurking
+#Remove any pipes that may be lurking for Run type 1
+if [[ $RunType == 1 ]]; then
 sed 's/|/_/g' $Query2 > $Prefix.input.fa
+fi
+
+#Remove any dots that may be lurking for Run type 2
+if [[ $RunType == 2 ]]; then
+sed 's/\..*/_/g' $Query2 > $Prefix.input.fa
+fi
 
 #Run blast
 mkdir -p blastn
 blastn -query $Prefix.input.fa -db $DB -max_target_seqs 1 -outfmt 6 -word_size $WS -num_threads $Threads -out blastn/$Prefix.blastn
 if [[ $RunType == 1 ]]; then
+echo "Begining protocol T1 filtering"
 awk -v FS='|' '{print $4}' blastn/$Prefix.blastn | sed 's/\..*//' | sort -u | comm -12 - <(sort $Ref | sed 's/\..*//') | join -2 3 - <(sed 's/|/ /3' blastn/$Prefix.blastn | sed 's/\..*//' | sort -k3,3) | awk '{print $2}' | sort -u > $Prefix.filt.h
 fi
 if [[ $RunType == 2 ]]; then
-awk '{print $2}' blastn/$Prefix.blastn | sort -u | comm -12 - <(sort $Ref) | join -2 2 - <(sort -k2,2 blastn/$Prefix.blastn) | awk '{print $2}' | sort -u > $Prefix.filt.h
+echo "Begining protocol T2 filtering"
+awk '{print $2}' blastn/$Prefix.blastn | sed 's/\..*//' | sort -u | comm -12 - <(sort $Ref | sed 's/\..*//') | join -2 2 - <(sort -k2,2 blastn/$Prefix.blastn | sed 's/\..*//') | awk '{print $2}' | sort -u > $Prefix.filt.h
 fi
 xargs samtools faidx $Prefix.input.fa < $Prefix.filt.h > $Prefix.filt.fasta
 rm $Prefix.input.fa
