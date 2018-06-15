@@ -175,6 +175,16 @@ else
 Query2=$Query
 fi
 
+#Check BLAST version
+if [[ $RunType == 1 ]]; then
+	BV=$(blastn -version | tail -n 1 | awk '{print $3}' | cut -c 1-3)
+	if [[ $BV > 2.5 ]]; then 
+		echo 'BLAST version > 2.5 detected, run type will be changed to 2' 
+		RunType=2 
+	fi
+fi
+
+
 #Remove any pipes that may be lurking for Run type 1
 if [[ $RunType == 1 ]]; then
 sed 's/|/_/g' $Query2 > $Prefix.input.fa
@@ -184,6 +194,7 @@ fi
 if [[ $RunType == 2 ]]; then
 sed 's/\..*/_/g' $Query2 > $Prefix.input.fa
 fi
+
 
 #Run blast
 mkdir -p blastn
